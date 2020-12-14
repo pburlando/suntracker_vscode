@@ -12,7 +12,7 @@
  */
 
 #include <Arduino.h>
-#include <DRVL298NMotorShield.h>
+#include "DRVL298NMotorShield.h"
 
 
 #define CDEMOTEURDIR 5
@@ -27,6 +27,7 @@ unsigned long old_time = millis();
 
 DRVL298NMotorShield drv(CDEMOTEURDIR, CDEMOTEURPWM, 7, 8, true, false);  //**  Pilotage du moteur à courant continu
 
+float u_ppv_v(int u_ppv_raw);
 
 void setup() {
   // put your setup code here, to run once:
@@ -70,11 +71,16 @@ void loop() {
     Serial.print(", ");
     Serial.print(lumG - lumD);
     Serial.print(", ");
-    Serial.print(u_ppv);
+    Serial.print(u_ppv_v(u_ppv));
     Serial.print(", ");
     Serial.println(i_ppv);
 
     old_time = millis();
   }
+
+}
+
+float u_ppv_v(int u_ppv_raw) {
+  return u_ppv_raw * 5 * 9.81 / 1024 /2;
 
 }
