@@ -28,6 +28,7 @@ unsigned long old_time = millis();
 DRVL298NMotorShield drv(CDEMOTEURDIR, CDEMOTEURPWM, 7, 8, true, false);  //**  Pilotage du moteur à courant continu
 
 float u_ppv_v(int u_ppv_raw);
+float i_ppv_mA(int i_ppv_raw);
 
 void setup() {
   // put your setup code here, to run once:
@@ -51,8 +52,6 @@ void loop() {
     int u_ppv = analogRead(brocheMesureTensionPPV);
     int i_ppv = analogRead(brocheMesureCourantPPV);
     int ecart = lumG - lumD;
-    //lumD = map(lumD, 0, 1024, 0, 5);
-    //lumG = map(lumG, 0, 1024, 0, 5);
 
     if (ecart > 30) {
       drv.setSpeeds(-130, 0);
@@ -73,14 +72,31 @@ void loop() {
     Serial.print(", ");
     Serial.print(u_ppv_v(u_ppv));
     Serial.print(", ");
-    Serial.println(i_ppv);
+    Serial.println(i_ppv_mA(i_ppv));
 
     old_time = millis();
   }
 
 }
 
+
+/**
+ * @brief retourne la mesure de la tension du panneau photovoltaïque en Volt
+ * 
+ * @param u_ppv_raw 
+ * @return float 
+ */
 float u_ppv_v(int u_ppv_raw) {
   return u_ppv_raw * 5 * 9.81 / 1024 /2;
 
+}
+
+/**
+ * @brief retourne la mesure du courant délivré par le panneau photovoltaïque en milliAmpère
+ * 
+ * @param i_ppv_raw 
+ * @return float 
+ */
+float i_ppv_mA(int i_ppv_raw) {
+  return -0.5725 * i_ppv_raw + 378.4;
 }
