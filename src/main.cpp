@@ -43,6 +43,7 @@ void loop() {
   /**
    * @brief Boucle de régulation tout ou rien de la position azimutale du panneau
    *        monitoring des informations sur le port série toutes les 0,5s
+   *        ecoute du port série toutes les 0,1s
    * 
    */
   
