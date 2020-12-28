@@ -21,7 +21,7 @@
 #define brocheCapteurGauche A0
 #define brocheMesureTensionPPV A2
 #define brocheMesureCourantPPV A3
-#define TE 500; // Durée d'échantillonage en milliseconde
+#define TE 1000 // Durée d'échantillonage en milliseconde
 
 unsigned long old_time = millis();
 
@@ -42,12 +42,12 @@ void setup() {
 void loop() {
   /**
    * @brief Boucle de régulation tout ou rien de la position azimutale du panneau
-   *        monitoring des informations sur le port série toutes les 0,5s
+   *        monitoring des informations sur le port série toutes les 1s
    *        ecoute du port série toutes les 0,1s
    * 
    */
   
-  if ((millis() - old_time) >= 500) {
+  if ((millis() - old_time) >= TE ) {
     int lumD = analogRead(brocheCapteurDroit);
     int lumG = analogRead(brocheCapteurGauche);
     int u_ppv = analogRead(brocheMesureTensionPPV);
@@ -55,10 +55,10 @@ void loop() {
     int ecart = lumG - lumD;
 
     if (ecart > 30) {
-      drv.setSpeeds(-130, 0);
+      drv.setSpeeds(-255, 0);
     }
     else if (ecart < -30) {
-      drv.setSpeeds(130, 0);
+      drv.setSpeeds(255, 0);
     }
     else {
       drv.setSpeeds(0, 0);
@@ -68,6 +68,10 @@ void loop() {
     Serial.print(lumG);
     Serial.print(", ");
     Serial.print(lumD);
+    Serial.print(", ");
+    Serial.print(u_ppv);
+    Serial.print(", ");
+    Serial.print(i_ppv);
     Serial.print(", ");
     Serial.print(lumG - lumD);
     Serial.print(", ");
@@ -99,5 +103,5 @@ float u_ppv_v(int u_ppv_raw) {
  * @return float 
  */
 float i_ppv_mA(int i_ppv_raw) {
-  return -0.5725 * i_ppv_raw + 378.4;
+  return -0.5725 * i_ppv_raw + 367;  //378.4
 }
