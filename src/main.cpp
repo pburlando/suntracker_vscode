@@ -55,10 +55,10 @@ void loop() {
     int ecart = lumG - lumD;
 
     if (ecart > 30) {
-      drv.setSpeeds(-255, 0);
+      drv.setSpeeds(-150, 0);
     }
     else if (ecart < -30) {
-      drv.setSpeeds(255, 0);
+      drv.setSpeeds(150, 0);
     }
     else {
       drv.setSpeeds(0, 0);
